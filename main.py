@@ -41,7 +41,7 @@ try:
 
     # first device in list
     my_vac = api.devices()[0]
-except e:
+except Exception as e:
     log.error("Could not open Ecovacs API", exc_info=e)
 # Device ID for a future multi device version
 if my_vac is not None:
@@ -54,7 +54,7 @@ else:
 try:
     vacbot = ObservableVacBot(api.uid, api.REALM, api.resource, api.user_access_token, my_vac, config['continent'])
     vacbot.connect_and_wait_until_ready()
-except e:
+except Exception as e:
     log.error("Could not connect to Deebot", exc_info=e)
 
 # MQTT INIT
@@ -68,7 +68,7 @@ try:
     mqttclient.connect(host=config['mqtt_client_host'], port=int(config['mqtt_client_port']), keepalive=int(config['mqtt_client_keepalive']),bind_address=config['mqtt_client_bind_address'])
     log.debug("Connected to MQTT host")
     
-except e:
+except Exception as e:
     log.error("Could not connect to MQTT Server {}".format(config["mqtt_client_host"], exc_info=e))
 
 
@@ -143,7 +143,7 @@ def mqttpublish(did,subtopic,message):
     try:
         mqttclient.publish(topic, message)
         log.info("Published message \'{}\' to topic \'{}\'".format(message, topic))
-    except e:
+    except Exception as e:
         log.error("Error publishing MQTT message", exc_info=e)
 
 vacbot.errorEvents.subscribe(error_report)
